@@ -31,27 +31,27 @@ type RegisterInput struct {
 	ConfirmPassword string
 }
 
-func (input *RegisterInput) Sanitize() {
-	input.Email = strings.TrimSpace(input.Email)
-	input.Email = strings.ToLower(input.Email)
+func (in *RegisterInput) Sanitize() {
+	in.Email = strings.TrimSpace(in.Email)
+	in.Email = strings.ToLower(in.Email)
 
-	input.Username = strings.TrimSpace(input.Username)
+	in.Username = strings.TrimSpace(in.Username)
 }
 
-func (input RegisterInput) Validate() error {
-	if len(input.Username) < UsernameMinLength {
+func (in RegisterInput) Validate() error {
+	if len(in.Username) < UsernameMinLength {
 		return fmt.Errorf("%w: username not long enough, (%d) characters at least", ErrValidation, UsernameMinLength)
 	}
 
-	if !emailRegexp.MatchString(input.Email) {
+	if !emailRegexp.MatchString(in.Email) {
 		return fmt.Errorf("%w: email not valid", ErrValidation)
 	}
 
-	if len(input.Password) < PasswordMinLength {
+	if len(in.Password) < PasswordMinLength {
 		return fmt.Errorf("%w: password not long enough, (%d) characters at least", ErrValidation, PasswordMinLength)
 	}
 
-	if input.Password != input.ConfirmPassword {
+	if in.Password != in.ConfirmPassword {
 		return fmt.Errorf("%w: confirm password must match the password", ErrValidation)
 	}
 
