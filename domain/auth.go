@@ -63,3 +63,31 @@ func (as *AuthService) Register(ctx context.Context, input twitterclone.Register
 		User:        user,
 	}, nil
 }
+
+func (as *AuthService) Login(ctx context.Context, input twitterclone.LoginInput) (twitterclone.AuthResponse, error) {
+	input.Sanitize()
+
+	if err := input.Validate(); err != nil {
+		return twitterclone.AuthResponse{}, err
+	}
+
+	user, err := as.UserRepo.GetByEmail(ctx, input.Email)
+
+	if err != nil {
+		switch {
+		case errors.Is(err, twitterclone.ErrNotFound):
+			return twitterclone.AuthResponse{}, twitterclone.ErrBadCredentials
+		default:
+			return twitterclone.AuthResponse{}, err
+		}
+	}
+
+	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(input.Password)); err != nil {
+		return twitterclone.AuthResponse{}, twitterclone.ErrBadCredentials
+	}
+
+	return twitterclone.AuthResponse{
+		AccessToken: "a token",
+		User:        user,
+	}, nil
+}
