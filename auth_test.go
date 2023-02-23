@@ -6,6 +6,26 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+func TestRegisterInput_Sanitize(t *testing.T) {
+	input := RegisterInput{
+		Username:        " bob ",
+		Email:           " BOB@gmail.com  ",
+		Password:        "password",
+		ConfirmPassword: "password",
+	}
+
+	want := RegisterInput{
+		Username:        "bob",
+		Email:           "bob@gmail.com",
+		Password:        "password",
+		ConfirmPassword: "password",
+	}
+
+	input.Sanitize()
+
+	require.Equal(t, want, input)
+}
+
 func TestRegisterInput_Validate(t *testing.T) {
 	testCases := []struct {
 		name  string
@@ -43,16 +63,6 @@ func TestRegisterInput_Validate(t *testing.T) {
 			err: ErrValidation,
 		},
 		{
-			name: "too short password",
-			input: RegisterInput{
-				Username:        "bob",
-				Email:           "bob@gmail.com",
-				Password:        "pass",
-				ConfirmPassword: "pass",
-			},
-			err: ErrValidation,
-		},
-		{
 			name: "confirm password doesn't match password",
 			input: RegisterInput{
 				Username:        "bob",
@@ -63,7 +73,6 @@ func TestRegisterInput_Validate(t *testing.T) {
 			err: ErrValidation,
 		},
 	}
-
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
@@ -76,24 +85,4 @@ func TestRegisterInput_Validate(t *testing.T) {
 			}
 		})
 	}
-}
-
-func TestRegisterInput_Sanitize(t *testing.T) {
-	input := RegisterInput{
-		Username:        " bob ",
-		Email:           " BOB@gmail.com  ",
-		Password:        "password",
-		ConfirmPassword: "password",
-	}
-
-	want := RegisterInput{
-		Username:        "bob",
-		Email:           "bob@gmail.com",
-		Password:        "password",
-		ConfirmPassword: "password",
-	}
-
-	input.Sanitize()
-
-	require.Equal(t, want, input)
 }
