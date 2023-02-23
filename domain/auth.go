@@ -5,9 +5,8 @@ import (
 	"errors"
 	"fmt"
 
-	"golang.org/x/crypto/bcrypt"
-
 	twitterclone "github.com/co-codin/twitter-clone-golang"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type AuthService struct {
@@ -27,11 +26,11 @@ func (as *AuthService) Register(ctx context.Context, input twitterclone.Register
 		return twitterclone.AuthResponse{}, err
 	}
 
-	if _, err := as.UserRepo.GetByUsername(input.Username); !errors.Is(err, twitterclone.ErrUsernameTaken) {
+	if _, err := as.UserRepo.GetByUsername(ctx, input.Username); !errors.Is(err, twitterclone.ErrUsernameTaken) {
 		return twitterclone.AuthResponse{}, twitterclone.ErrUsernameTaken
 	}
 
-	if _, err := as.UserRepo.GetByEmail(input.Email); !errors.Is(err, twitterclone.ErrEmailTaken) {
+	if _, err := as.UserRepo.GetByEmail(ctx, input.Email); !errors.Is(err, twitterclone.ErrEmailTaken) {
 		return twitterclone.AuthResponse{}, twitterclone.ErrUsernameTaken
 	}
 
