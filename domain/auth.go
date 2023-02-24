@@ -63,7 +63,6 @@ func (as *AuthService) Register(ctx context.Context, input twitterclone.Register
 		User:        user,
 	}, nil
 }
-
 func (as *AuthService) Login(ctx context.Context, input twitterclone.LoginInput) (twitterclone.AuthResponse, error) {
 	input.Sanitize()
 
@@ -72,7 +71,6 @@ func (as *AuthService) Login(ctx context.Context, input twitterclone.LoginInput)
 	}
 
 	user, err := as.UserRepo.GetByEmail(ctx, input.Email)
-
 	if err != nil {
 		switch {
 		case errors.Is(err, twitterclone.ErrNotFound):
