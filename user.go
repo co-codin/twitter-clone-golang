@@ -1,4 +1,4 @@
-package twitterclone
+package twitter
 
 import (
 	"context"
@@ -8,13 +8,19 @@ import (
 
 var (
 	ErrUsernameTaken = errors.New("username taken")
-	ErrEmailTaken = errors.New("email taken")
+	ErrEmailTaken    = errors.New("email taken")
 )
+
+type UserService interface {
+	GetByID(ctx context.Context, id string) (User, error)
+}
 
 type UserRepo interface {
 	Create(ctx context.Context, user User) (User, error)
 	GetByUsername(ctx context.Context, username string) (User, error)
 	GetByEmail(ctx context.Context, email string) (User, error)
+	GetByID(ctx context.Context, id string) (User, error)
+	GetByIds(ctx context.Context, ids []string) ([]User, error)
 }
 
 type User struct {

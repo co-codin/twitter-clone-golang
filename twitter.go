@@ -1,4 +1,4 @@
-package twitterclone
+package twitter
 
 import "errors"
 
